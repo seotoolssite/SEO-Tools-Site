@@ -117,58 +117,9 @@
             cursor: pointer;
         }
 
-        /* Search Bar Styles */
-        .search-container {
-            background: white;
-            padding: 20px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 99;
-            transition: all 0.3s ease;
-        }
-
-        .search-box {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 50px;
-            font-size: 1rem;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .search-box input:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
-        }
-
-        .search-box button {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--accent-color);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .search-box button:hover {
-            background: var(--accent-hover);
-        }
-
         /* Hero Section */
         .hero {
-            padding: 80px 0;
+            padding: 80px 0 40px;
             text-align: center;
             background: var(--header-gradient);
             color: white;
@@ -186,6 +137,76 @@
             max-width: 600px;
             margin: 0 auto 30px;
             opacity: 0.9;
+        }
+
+        /* Big Explore Button */
+        .explore-btn {
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .explore-btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Search Box in Hero Section */
+        .hero-search-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px 0;
+            margin-top: 20px;
+        }
+
+        .hero-search-box {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-search-box input {
+            width: 100%;
+            padding: 18px 25px;
+            border: 3px solid var(--accent-color);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-search-box input:focus {
+            border-color: var(--accent-hover);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .hero-search-box button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .hero-search-box button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-50%) scale(1.05);
         }
 
         /* Tools Section */
@@ -227,11 +248,19 @@
             flex-direction: column;
             height: 100%;
             text-align: center;
+            border: 2px solid transparent;
         }
 
         .tool-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .tool-card.highlighted {
+            border-color: var(--accent-color);
+            background: linear-gradient(135deg, #FFF9E6, #FFFFFF);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            transform: scale(1.03);
         }
 
         .tool-icon {
@@ -257,7 +286,7 @@
             font-size: 0.9rem;
         }
 
-        /* Category Section Styling - Removed sidebar style */
+        /* Category Section Styling */
         .category-section {
             margin-bottom: 60px;
         }
@@ -378,7 +407,7 @@
             }
             
             .hero {
-                padding: 60px 0;
+                padding: 60px 0 30px;
             }
             
             .hero h1 {
@@ -391,6 +420,11 @@
             
             .section-title h2 {
                 font-size: 2rem;
+            }
+            
+            .explore-btn {
+                padding: 15px 30px;
+                font-size: 1.1rem;
             }
         }
 
@@ -412,12 +446,12 @@
                 font-size: 1.7rem;
             }
             
-            .search-box input {
-                padding: 12px 15px;
+            .hero-search-box input {
+                padding: 15px 20px;
             }
             
-            .search-box button {
-                padding: 8px 15px;
+            .hero-search-box button {
+                padding: 10px 20px;
             }
         }
     </style>
@@ -439,20 +473,20 @@
         </div>
     </header>
 
-    <!-- Search Bar (Hidden by default) -->
-    <div class="search-container" id="searchBar" style="display: none;">
-        <div class="container search-box">
-            <input type="text" placeholder="Search for tools...">
-            <button>Search</button>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
+    <!-- Hero Section with Search -->
     <section class="hero" id="home">
         <div class="container">
             <h1>Simplifying Your Digital Life</h1>
             <p>All-in-one online tools for productivity, accuracy, and efficiency.</p>
-            <button class="btn" id="exploreBtn">Explore Tools</button>
+            <button class="explore-btn" id="exploreBtn">Explore Tools</button>
+            
+            <!-- Search Box in Hero Section -->
+            <div class="hero-search-container">
+                <div class="hero-search-box">
+                    <input type="text" id="heroSearch" placeholder="Search for tools... (e.g., 'Image Converter', 'PDF', 'Calculator')">
+                    <button id="heroSearchBtn">Search</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -468,37 +502,37 @@
             <div class="category-section">
                 <h3 class="category-title">Image Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Image Converter">
                         <div class="tool-icon">🖼️</div>
                         <h4 class="tool-name">Image Converter</h4>
                         <p class="tool-desc">Convert images between different formats with ease.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Image Compressor">
                         <div class="tool-icon">📦</div>
                         <h4 class="tool-name">Image Compressor</h4>
                         <p class="tool-desc">Reduce image file size without losing quality.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Image Resizer">
                         <div class="tool-icon">📏</div>
                         <h4 class="tool-name">Image Resizer</h4>
                         <p class="tool-desc">Resize images to your desired dimensions.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Image Cropper">
                         <div class="tool-icon">✂️</div>
                         <h4 class="tool-name">Image Cropper</h4>
                         <p class="tool-desc">Crop images to focus on important areas.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Image to Text OCR">
                         <div class="tool-icon">🔤</div>
                         <h4 class="tool-name">Image to Text (OCR)</h4>
                         <p class="tool-desc">Extract text from images using OCR technology.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Image Rotator Flipper">
                         <div class="tool-icon">🔄</div>
                         <h4 class="tool-name">Image Rotator / Flipper</h4>
                         <p class="tool-desc">Rotate or flip images as needed.</p>
@@ -511,37 +545,37 @@
             <div class="category-section">
                 <h3 class="category-title">Document Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="PDF to Word Word to PDF">
                         <div class="tool-icon">📄</div>
                         <h4 class="tool-name">PDF to Word / Word to PDF</h4>
                         <p class="tool-desc">Convert between PDF and Word documents.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="PDF Compressor">
                         <div class="tool-icon">🗜️</div>
                         <h4 class="tool-name">PDF Compressor</h4>
                         <p class="tool-desc">Reduce PDF file size while maintaining quality.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="PDF Merger Splitter">
                         <div class="tool-icon">🔗</div>
                         <h4 class="tool-name">PDF Merger & Splitter</h4>
                         <p class="tool-desc">Combine or split PDF files as needed.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Document Converter">
                         <div class="tool-icon">📑</div>
                         <h4 class="tool-name">Document Converter</h4>
                         <p class="tool-desc">Convert between various document formats.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="PDF Lock Unlock">
                         <div class="tool-icon">🔒</div>
                         <h4 class="tool-name">PDF Lock / Unlock</h4>
                         <p class="tool-desc">Add or remove password protection from PDFs.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="eSign PDF">
                         <div class="tool-icon">✍️</div>
                         <h4 class="tool-name">eSign PDF</h4>
                         <p class="tool-desc">Add electronic signatures to PDF documents.</p>
@@ -554,43 +588,43 @@
             <div class="category-section">
                 <h3 class="category-title">Calculator Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Scientific Calculator">
                         <div class="tool-icon">🧮</div>
                         <h4 class="tool-name">Scientific Calculator</h4>
                         <p class="tool-desc">Advanced calculator for complex calculations.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Age Calculator">
                         <div class="tool-icon">🎂</div>
                         <h4 class="tool-name">Age Calculator</h4>
                         <p class="tool-desc">Calculate age from birth date to current date.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="BMI Calculator">
                         <div class="tool-icon">⚖️</div>
                         <h4 class="tool-name">BMI Calculator</h4>
                         <p class="tool-desc">Calculate your Body Mass Index.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Loan EMI Calculator">
                         <div class="tool-icon">💰</div>
                         <h4 class="tool-name">Loan EMI Calculator</h4>
                         <p class="tool-desc">Calculate Equated Monthly Installments for loans.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="GST Calculator">
                         <div class="tool-icon">📊</div>
                         <h4 class="tool-name">GST Calculator</h4>
                         <p class="tool-desc">Calculate Goods and Services Tax amounts.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Currency Converter">
                         <div class="tool-icon">💱</div>
                         <h4 class="tool-name">Currency Converter</h4>
                         <p class="tool-desc">Convert between different world currencies.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Random Password Generator">
                         <div class="tool-icon">🔐</div>
                         <h4 class="tool-name">Random Password Generator</h4>
                         <p class="tool-desc">Create strong, secure passwords instantly.</p>
@@ -603,19 +637,19 @@
             <div class="category-section">
                 <h3 class="category-title">Audio / Video Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Video Converter">
                         <div class="tool-icon">🎬</div>
                         <h4 class="tool-name">Video Converter</h4>
                         <p class="tool-desc">Convert videos between different formats.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Video Compressor">
                         <div class="tool-icon">📹</div>
                         <h4 class="tool-name">Video Compressor</h4>
                         <p class="tool-desc">Reduce video file size without quality loss.</p>
                         <button class="btn tool-btn">Use Tool</button>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-tool-name="Audio Trimmer">
                         <div class="tool-icon">✂️</div>
                         <h4 class="tool-name">Audio Trimmer</h4>
                         <p class="tool-desc">Trim audio files to your desired length.</p>
@@ -661,18 +695,71 @@
             navLinks.classList.toggle('active');
         });
 
-        // Explore Button - Search Bar Toggle
+        // Explore Button - Scroll to Tools Section
         const exploreBtn = document.getElementById('exploreBtn');
-        const searchBar = document.getElementById('searchBar');
-
+        
         exploreBtn.addEventListener('click', () => {
-            if (searchBar.style.display === 'none') {
-                searchBar.style.display = 'block';
-                // Smooth scroll to search bar
-                searchBar.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                searchBar.style.display = 'none';
+            document.getElementById('tools').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        });
+
+        // Search Functionality
+        const heroSearch = document.getElementById('heroSearch');
+        const heroSearchBtn = document.getElementById('heroSearchBtn');
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        // Remove highlights from all tools
+        function removeHighlights() {
+            toolCards.forEach(card => {
+                card.classList.remove('highlighted');
+            });
+        }
+
+        // Search function
+        function performSearch() {
+            const searchTerm = heroSearch.value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                removeHighlights();
+                return;
             }
+
+            removeHighlights();
+            
+            let found = false;
+            toolCards.forEach(card => {
+                const toolName = card.getAttribute('data-tool-name').toLowerCase();
+                const toolTitle = card.querySelector('.tool-name').textContent.toLowerCase();
+                
+                if (toolName.includes(searchTerm) || toolTitle.includes(searchTerm)) {
+                    card.classList.add('highlighted');
+                    found = true;
+                    
+                    // Scroll to the highlighted tool
+                    card.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }
+            });
+
+            if (!found) {
+                alert(`No tools found for "${searchTerm}". Try searching for: Image, PDF, Calculator, Video, etc.`);
+            }
+        }
+
+        // Event listeners for search
+        heroSearchBtn.addEventListener('click', performSearch);
+        heroSearch.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Clear search when clicking on search input
+        heroSearch.addEventListener('click', function() {
+            this.select();
         });
 
         // Smooth scrolling for anchor links
@@ -703,25 +790,6 @@
                 alert(`You clicked on "${toolName}". This is a placeholder - the actual tool would open here.`);
             });
         });
-
-        // Search functionality
-        const searchInput = document.querySelector('.search-box input');
-        const searchButton = document.querySelector('.search-box button');
-
-        searchButton.addEventListener('click', performSearch);
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
-        });
-
-        function performSearch() {
-            const searchTerm = searchInput.value.trim();
-            if (searchTerm) {
-                alert(`Searching for: "${searchTerm}" - This would filter tools in a real implementation.`);
-                // In real implementation, you would filter tools based on search term
-            }
-        }
     </script>
 </body>
 </html>
