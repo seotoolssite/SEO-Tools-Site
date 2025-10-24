@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
             background: #2B2D42;
             padding: 20px;
@@ -56,24 +56,62 @@
             justify-content: space-around;
             margin: 20px 0;
             flex-wrap: wrap;
+            gap: 20px;
         }
 
         .image-box {
-            margin: 10px;
+            flex: 1;
+            min-width: 250px;
             text-align: center;
+            padding: 15px;
+            background: #1E1E2F;
+            border-radius: 8px;
+            border: 2px solid #FFD700;
         }
 
         .image-box img {
-            max-width: 250px;
-            max-height: 200px;
+            max-width: 100%;
+            max-height: 250px;
             border-radius: 5px;
-            border: 2px solid #FFD700;
+            margin-top: 10px;
+        }
+
+        .format-info {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 5px;
         }
 
         .conversion-info {
             color: #FFD700;
             font-weight: bold;
-            margin: 10px 0;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: #FFD700;
+            color: #1E1E2F;
+            padding: 12px 30px;
+            margin-top: 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #E6C200;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -100,17 +138,29 @@
 
     <script>
         let originalImageUrl = '';
+        let originalFormat = '';
         
         // Show original image when uploaded
         document.getElementById('imageInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
+                // Get original file format
+                originalFormat = file.name.split('.').pop().toUpperCase();
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     originalImageUrl = e.target.result;
                     document.getElementById('originalPreview').innerHTML = `
-                        <h3>Original Image</h3>
-                        <img src="${originalImageUrl}" style="max-width: 300px; border-radius: 5px; border: 2px solid #FFD700;">
+                        <div class="format-info">Original Format: ${originalFormat}</div>
+                        <div class="image-container">
+                            <div class="image-box">
+                                <h3>Original Image</h3>
+                                <img src="${originalImageUrl}" alt="Original Image">
+                                <div style="margin-top: 10px; color: #FFD700; font-weight: bold;">
+                                    Format: ${originalFormat}
+                                </div>
+                            </div>
+                        </div>
                     `;
                     document.getElementById('convertedPreview').innerHTML = '';
                 };
@@ -145,31 +195,30 @@
                     
                     // Convert image
                     const convertedImage = canvas.toDataURL(`image/${format}`);
+                    const targetFormat = format.toUpperCase();
                     
                     // Show converted image preview
                     convertedPreview.innerHTML = `
-                        <div class="conversion-info">Converted to ${format.toUpperCase()}</div>
+                        <div class="conversion-info">✅ Conversion Complete: ${originalFormat} → ${targetFormat}</div>
                         <div class="image-container">
                             <div class="image-box">
-                                <h4>Original</h4>
-                                <img src="${originalImageUrl}" alt="Original">
+                                <h3>Original Image</h3>
+                                <img src="${originalImageUrl}" alt="Original Image">
+                                <div style="margin-top: 10px; color: #FFD700; font-weight: bold;">
+                                    Format: ${originalFormat}
+                                </div>
                             </div>
                             <div class="image-box">
-                                <h4>Converted</h4>
-                                <img src="${convertedImage}" alt="Converted">
+                                <h3>Converted Image</h3>
+                                <img src="${convertedImage}" alt="Converted Image">
+                                <div style="margin-top: 10px; color: #FFD700; font-weight: bold;">
+                                    Format: ${targetFormat}
+                                </div>
                             </div>
                         </div>
-                        <a href="${convertedImage}" download="converted_image.${format}" class="download-btn" onclick="autoRefresh()" style="
-                            display: inline-block;
-                            background: #FFD700;
-                            color: #1E1E2F;
-                            padding: 12px 24px;
-                            margin-top: 15px;
-                            text-decoration: none;
-                            border-radius: 5px;
-                            font-weight: bold;
-                            cursor: pointer;
-                        ">Download Converted Image</a>
+                        <a href="${convertedImage}" download="converted_image.${format}" class="download-btn" onclick="autoRefresh()">
+                            📥 Download ${targetFormat} Image
+                        </a>
                     `;
                     
                     status.textContent = '';
@@ -182,7 +231,7 @@
         function autoRefresh() {
             setTimeout(() => {
                 location.reload();
-            }, 2000); // Refresh after 2 seconds
+            }, 2000);
         }
     </script>
 </body>
