@@ -117,13 +117,62 @@
             cursor: pointer;
         }
 
+        /* Search Bar Styles */
+        .search-container {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 99;
+            transition: all 0.3s ease;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .search-box button:hover {
+            background: var(--accent-hover);
+        }
+
         /* Hero Section */
         .hero {
             padding: 80px 0;
             text-align: center;
             background: var(--header-gradient);
             color: white;
-            margin-bottom: 60px;
+            margin-bottom: 0;
         }
 
         .hero h1 {
@@ -141,7 +190,7 @@
 
         /* Tools Section */
         .tools-section {
-            padding: 40px 0 80px;
+            padding: 60px 0;
         }
 
         .section-title {
@@ -161,22 +210,11 @@
             color: #555;
         }
 
-        .category {
-            margin-bottom: 60px;
-        }
-
-        .category-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--accent-color);
-            display: inline-block;
-        }
-
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
+            margin-bottom: 50px;
         }
 
         .tool-card {
@@ -188,6 +226,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            text-align: center;
         }
 
         .tool-card:hover {
@@ -213,9 +252,25 @@
         }
 
         .tool-btn {
-            align-self: flex-start;
+            align-self: center;
             padding: 10px 20px;
             font-size: 0.9rem;
+        }
+
+        /* Category Section Styling - Removed sidebar style */
+        .category-section {
+            margin-bottom: 60px;
+        }
+
+        .category-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent-color);
+            display: inline-block;
+            width: 100%;
         }
 
         /* Footer */
@@ -356,6 +411,14 @@
             .section-title h2 {
                 font-size: 1.7rem;
             }
+            
+            .search-box input {
+                padding: 12px 15px;
+            }
+            
+            .search-box button {
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
@@ -376,12 +439,20 @@
         </div>
     </header>
 
+    <!-- Search Bar (Hidden by default) -->
+    <div class="search-container" id="searchBar" style="display: none;">
+        <div class="container search-box">
+            <input type="text" placeholder="Search for tools...">
+            <button>Search</button>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
             <h1>Simplifying Your Digital Life</h1>
             <p>All-in-one online tools for productivity, accuracy, and efficiency.</p>
-            <a href="#tools" class="btn">Get Started</a>
+            <button class="btn" id="exploreBtn">Explore Tools</button>
         </div>
     </section>
 
@@ -390,11 +461,11 @@
         <div class="container">
             <div class="section-title">
                 <h2>Our Powerful Tools</h2>
-                <p>Choose from our wide range of tools designed to make your digital tasks easier and more efficient.</p>
+                <p>Explore our collection of free online tools designed to make your digital tasks easier and more efficient.</p>
             </div>
 
             <!-- Image Tools -->
-            <div class="category">
+            <div class="category-section">
                 <h3 class="category-title">Image Tools</h3>
                 <div class="tools-grid">
                     <div class="tool-card">
@@ -437,7 +508,7 @@
             </div>
 
             <!-- Document Tools -->
-            <div class="category">
+            <div class="category-section">
                 <h3 class="category-title">Document Tools</h3>
                 <div class="tools-grid">
                     <div class="tool-card">
@@ -480,7 +551,7 @@
             </div>
 
             <!-- Calculator Tools -->
-            <div class="category">
+            <div class="category-section">
                 <h3 class="category-title">Calculator Tools</h3>
                 <div class="tools-grid">
                     <div class="tool-card">
@@ -529,7 +600,7 @@
             </div>
 
             <!-- Audio/Video Tools -->
-            <div class="category">
+            <div class="category-section">
                 <h3 class="category-title">Audio / Video Tools</h3>
                 <div class="tools-grid">
                     <div class="tool-card">
@@ -590,6 +661,20 @@
             navLinks.classList.toggle('active');
         });
 
+        // Explore Button - Search Bar Toggle
+        const exploreBtn = document.getElementById('exploreBtn');
+        const searchBar = document.getElementById('searchBar');
+
+        exploreBtn.addEventListener('click', () => {
+            if (searchBar.style.display === 'none') {
+                searchBar.style.display = 'block';
+                // Smooth scroll to search bar
+                searchBar.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                searchBar.style.display = 'none';
+            }
+        });
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
@@ -618,6 +703,25 @@
                 alert(`You clicked on "${toolName}". This is a placeholder - the actual tool would open here.`);
             });
         });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-box input');
+        const searchButton = document.querySelector('.search-box button');
+
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                alert(`Searching for: "${searchTerm}" - This would filter tools in a real implementation.`);
+                // In real implementation, you would filter tools based on search term
+            }
+        }
     </script>
 </body>
 </html>
