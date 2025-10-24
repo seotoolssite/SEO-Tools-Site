@@ -5,36 +5,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Converter Tool</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background: #1E1E2F; color: #EAEAEA; text-align: center; padding: 20px; }
-        .container { max-width: 700px; margin: auto; background: #2B2D42; padding: 20px; border-radius: 10px; }
-        input, select, button { margin: 10px 0; padding: 10px; width: 100%; border-radius: 5px; border: none; }
-        button { background: #FFD700; color: #1E1E2F; cursor: pointer; font-weight: bold; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #1E1E2F;
+            color: #EAEAEA;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #2B2D42;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+        }
+
+        input, select, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            background: #FFD700;
+            color: #1E1E2F;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #E6C200;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .image-box {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 15px;
+            background: #1E1E2F;
+            border-radius: 8px;
+            border: 2px solid #FFD700;
+        }
+
+        .image-box img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .format-info {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: #FFD700;
+            color: #1E1E2F;
+            padding: 12px 30px;
+            margin-top: 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Image Converter - TEST</h2>
+        <h2>Image Converter</h2>
         <input type="file" id="imageUpload" accept="image/*">
         <select id="formatSelect">
             <option value="png">PNG</option>
             <option value="jpeg">JPG</option>
+            <option value="webp">WEBP</option>
+            <option value="gif">GIF</option>
+            <option value="bmp">BMP</option>
         </select>
-        <button onclick="testButton()">Test Convert Button</button>
-        <p id="status">Status will appear here</p>
+        <button onclick="convertImage()">Convert Image</button>
+        <p id="status"></p>
+        
+        <div id="resultContainer"></div>
     </div>
 
     <script>
-        function testButton() {
+        function convertImage() {
             const fileInput = document.getElementById('imageUpload');
+            const format = document.getElementById('formatSelect').value;
             const status = document.getElementById('status');
-            
+            const resultContainer = document.getElementById('resultContainer');
+
             if (!fileInput.files.length) {
-                status.textContent = "❌ Please upload an image first!";
+                alert('Please upload an image first.');
                 return;
             }
-            
-            status.textContent = "✅ Button working! File selected: " + fileInput.files[0].name;
+
+            status.textContent = 'Converting image...';
+            const file = fileInput.files[0];
+            const originalFormat = file.name.split('.').pop().toUpperCase();
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const convertedImage = canvas.toDataURL(`image/${format}`);
+                    const targetFormat = format.toUpperCase();
+                    
+                    resultContainer.innerHTML = `
+                        <div class="format-info">✅ Conversion Complete: ${originalFormat} → ${targetFormat}</div>
+                        <div class="image-container">
+                            <div class="image-box">
+                                <h3>Original Image (${originalFormat})</h3>
+                                <img src="${event.target.result}" alt="Original Image">
+                            </div>
+                            <div class="image-box">
+                                <h3>Converted Image (${targetFormat})</h3>
+                                <img src="${convertedImage}" alt="Converted Image">
+                            </div>
+                        </div>
+                        <a href="${convertedImage}" download="converted_image.${format}" class="download-btn">
+                            📥 Download ${targetFormat} Image
+                        </a>
+                    `;
+                    
+                    status.textContent = '';
+                };
+            };
+            reader.readAsDataURL(file);
         }
     </script>
 </body>
