@@ -118,7 +118,7 @@
 <body>
     <div class="container">
         <h2>Image Converter</h2>
-        <input type="file" id="imageUpload" accept="image/*"> 
+        <input type="file" id="imageUpload" accept="image/*">
         <select id="formatSelect">
             <option value="png">PNG</option>
             <option value="jpeg">JPG</option>
@@ -126,7 +126,7 @@
             <option value="gif">GIF</option>
             <option value="bmp">BMP</option>
         </select>
-        <button onclick="startConversion()">Convert Image</button>
+        <button onclick="convertImage()">Convert Image</button>
         <p id="status"></p>
         
         <!-- Original Image Preview -->
@@ -141,7 +141,7 @@
         let originalFormat = '';
         
         // Show original image when uploaded
-        document.getElementById('imageInput').addEventListener('change', function(event) {
+        document.getElementById('imageUpload').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
                 // Get original file format
@@ -216,7 +216,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="${convertedImage}" download="converted_image.${format}" class="download-btn" onclick="autoRefresh()">
+                        <a href="${convertedImage}" download="converted_image.${format}" class="download-btn" onclick="setTimeout(() => location.reload(), 2000)">
                             📥 Download ${targetFormat} Image
                         </a>
                     `;
@@ -225,13 +225,6 @@
                 };
             };
             reader.readAsDataURL(file);
-        }
-
-        // Auto refresh after download
-        function autoRefresh() {
-            setTimeout(() => {
-                location.reload();
-            }, 2000);
         }
     </script>
 </body>
