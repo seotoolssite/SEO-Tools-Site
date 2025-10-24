@@ -145,6 +145,104 @@
             box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
         }
 
+        /* Search Section */
+        .search-section {
+            background-color: white;
+            padding: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .search-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .search-btn {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .search-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .category-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 100px;
+        }
+
+        .category-btn:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .category-btn.active {
+            border-color: var(--accent-color);
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .category-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .category-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
         /* Tools Section */
         .tools-section {
             padding: 80px 0;
@@ -376,6 +474,19 @@
             .tools-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .category-filters {
+                gap: 10px;
+            }
+            
+            .category-btn {
+                min-width: 80px;
+                padding: 10px;
+            }
+            
+            .category-icon {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -389,6 +500,20 @@
             
             .tool-card {
                 padding: 20px;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+            
+            .search-btn {
+                border-radius: 5px;
+                padding: 12px;
             }
         }
     </style>
@@ -423,9 +548,55 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
-            <h1>Simplifying Your Digital Life</h1>
-            <p>All-in-one online tools for productivity, accuracy, and efficiency.</p>
-            <a href="#tools" class="btn">Get Started</a>
+            <h1>Your Daily Tools, All in One Place</h1>
+            <p>Convert, calculate, compress, and simplify your everyday tasks — fast and free.</p>
+            <button class="btn" id="explore-tools-btn">Explore Tools</button>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section" id="search-section">
+        <div class="container">
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="search-input" placeholder="Search for tools...">
+                    <button class="search-btn" id="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="category-filters">
+                    <div class="category-btn" data-category="all">
+                        <div class="category-icon">
+                            <i class="fas fa-th-large"></i>
+                        </div>
+                        <div class="category-name">All</div>
+                    </div>
+                    <div class="category-btn" data-category="image">
+                        <div class="category-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="category-name">Image</div>
+                    </div>
+                    <div class="category-btn" data-category="document">
+                        <div class="category-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="category-name">Document</div>
+                    </div>
+                    <div class="category-btn" data-category="calculator">
+                        <div class="category-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="category-name">Calculator</div>
+                    </div>
+                    <div class="category-btn" data-category="audio-video">
+                        <div class="category-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="category-name">Audio/Video</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -438,10 +609,10 @@
             </div>
 
             <!-- Image Tools -->
-            <div class="category">
+            <div class="category" id="image-tools">
                 <h3 class="category-title">Image Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="image">
                         <div class="tool-icon">
                             <i class="fas fa-file-image"></i>
                         </div>
@@ -449,7 +620,7 @@
                         <p>Convert images between different formats with ease.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="image">
                         <div class="tool-icon">
                             <i class="fas fa-compress-alt"></i>
                         </div>
@@ -457,7 +628,7 @@
                         <p>Reduce image file size without losing quality.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="image">
                         <div class="tool-icon">
                             <i class="fas fa-expand-alt"></i>
                         </div>
@@ -465,7 +636,7 @@
                         <p>Resize images to your desired dimensions.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="image">
                         <div class="tool-icon">
                             <i class="fas fa-crop-alt"></i>
                         </div>
@@ -473,7 +644,7 @@
                         <p>Crop images to focus on important areas.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="image">
                         <div class="tool-icon">
                             <i class="fas fa-font"></i>
                         </div>
@@ -481,7 +652,7 @@
                         <p>Extract text from images using OCR technology.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="image">
                         <div class="tool-icon">
                             <i class="fas fa-sync"></i>
                         </div>
@@ -493,10 +664,10 @@
             </div>
 
             <!-- Document Tools -->
-            <div class="category">
+            <div class="category" id="document-tools">
                 <h3 class="category-title">Document Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="document">
                         <div class="tool-icon">
                             <i class="fas fa-file-pdf"></i>
                         </div>
@@ -504,7 +675,7 @@
                         <p>Convert between PDF and Word document formats.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="document">
                         <div class="tool-icon">
                             <i class="fas fa-file-archive"></i>
                         </div>
@@ -512,7 +683,7 @@
                         <p>Reduce PDF file size while maintaining quality.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="document">
                         <div class="tool-icon">
                             <i class="fas fa-object-group"></i>
                         </div>
@@ -520,7 +691,7 @@
                         <p>Combine multiple PDFs or split large PDFs.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="document">
                         <div class="tool-icon">
                             <i class="fas fa-exchange-alt"></i>
                         </div>
@@ -528,7 +699,7 @@
                         <p>Convert between various document formats.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="document">
                         <div class="tool-icon">
                             <i class="fas fa-lock"></i>
                         </div>
@@ -536,7 +707,7 @@
                         <p>Add or remove password protection from PDFs.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="document">
                         <div class="tool-icon">
                             <i class="fas fa-signature"></i>
                         </div>
@@ -548,10 +719,10 @@
             </div>
 
             <!-- Calculator Tools -->
-            <div class="category">
+            <div class="category" id="calculator-tools">
                 <h3 class="category-title">Calculator Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="calculator">
                         <div class="tool-icon">
                             <i class="fas fa-calculator"></i>
                         </div>
@@ -559,7 +730,7 @@
                         <p>Advanced calculator for complex mathematical operations.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="calculator">
                         <div class="tool-icon">
                             <i class="fas fa-birthday-cake"></i>
                         </div>
@@ -567,7 +738,7 @@
                         <p>Calculate age based on birth date and current date.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="calculator">
                         <div class="tool-icon">
                             <i class="fas fa-weight"></i>
                         </div>
@@ -575,7 +746,7 @@
                         <p>Calculate your Body Mass Index for health assessment.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="calculator">
                         <div class="tool-icon">
                             <i class="fas fa-money-bill-wave"></i>
                         </div>
@@ -583,7 +754,7 @@
                         <p>Calculate Equated Monthly Installments for loans.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="calculator">
                         <div class="tool-icon">
                             <i class="fas fa-percentage"></i>
                         </div>
@@ -591,7 +762,7 @@
                         <p>Calculate Goods and Services Tax amounts.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="calculator">
                         <div class="tool-icon">
                             <i class="fas fa-dollar-sign"></i>
                         </div>
@@ -599,7 +770,7 @@
                         <p>Convert between different world currencies.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="calculator">
                         <div class="tool-icon">
                             <i class="fas fa-key"></i>
                         </div>
@@ -611,10 +782,10 @@
             </div>
 
             <!-- Audio / Video Tools -->
-            <div class="category">
+            <div class="category" id="audio-video-tools">
                 <h3 class="category-title">Audio / Video Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="audio-video">
                         <div class="tool-icon">
                             <i class="fas fa-film"></i>
                         </div>
@@ -622,7 +793,7 @@
                         <p>Convert videos between different formats.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="audio-video">
                         <div class="tool-icon">
                             <i class="fas fa-compress-arrows-alt"></i>
                         </div>
@@ -630,7 +801,7 @@
                         <p>Reduce video file size while maintaining quality.</p>
                         <a href="#" class="btn tool-btn">Use Tool</a>
                     </div>
-                    <div class="tool-card">
+                    <div class="tool-card" data-category="audio-video">
                         <div class="tool-icon">
                             <i class="fas fa-cut"></i>
                         </div>
@@ -712,6 +883,71 @@
                 alert(`Thank you for your interest in ${toolName}! This tool will be available soon.`);
             });
         });
+
+        // Search and Filter Functionality
+        const exploreToolsBtn = document.getElementById('explore-tools-btn');
+        const searchSection = document.getElementById('search-section');
+        const searchInput = document.getElementById('search-input');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        // Toggle search section when "Explore Tools" button is clicked
+        exploreToolsBtn.addEventListener('click', function() {
+            searchSection.classList.toggle('active');
+            
+            // If opening the search section, focus on the search input
+            if (searchSection.classList.contains('active')) {
+                searchInput.focus();
+                
+                // Scroll to search section if not fully visible
+                searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+
+        // Filter tools based on search input
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            toolCards.forEach(card => {
+                const toolName = card.querySelector('h3').textContent.toLowerCase();
+                const toolDescription = card.querySelector('p').textContent.toLowerCase();
+                
+                // Show card if search term matches tool name or description
+                if (toolName.includes(searchTerm) || toolDescription.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter tools by category
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all category buttons
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                
+                // Show/hide tools based on selected category
+                toolCards.forEach(card => {
+                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Clear search input when filtering by category
+                searchInput.value = '';
+            });
+        });
+
+        // Initialize with "All" category selected
+        document.querySelector('.category-btn[data-category="all"]').classList.add('active');
     </script>
 </body>
 </html>
