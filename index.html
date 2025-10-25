@@ -786,12 +786,17 @@
         });
 
         // Tool button click handlers
-        document.querySelectorAll('.tool-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const toolName = this.parentElement.querySelector('.tool-name').textContent;
-                alert(`You clicked on "${toolName}". This is a placeholder - the actual tool would open here.`);
-            });
-        });
-    </script>
-</body>
-</html>
+document.querySelectorAll('.tool-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const toolName = this.parentElement.querySelector('.tool-name').textContent;
+        
+        // Check if it's Image Converter
+        if (toolName === "Image Converter") {
+            window.location.href = "image-converter.html";
+        } 
+        // For other tools, show coming soon message
+        else {
+            alert(`"${toolName}" tool is coming soon! We're working hard to bring you this feature.`);
+        }
+    });
+});
