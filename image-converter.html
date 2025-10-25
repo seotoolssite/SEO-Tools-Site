@@ -17,23 +17,48 @@
             color: #EAEAEA;
             text-align: center;
             padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
             max-width: 600px;
             margin: auto;
             background: #2B2D42;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            border: 2px solid #FFD700;
+        }
+
+        h2 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 2rem;
         }
 
         input, select, button {
-            margin: 10px 0;
-            padding: 10px;
+            margin: 12px 0;
+            padding: 12px;
             width: 100%;
-            border-radius: 5px;
+            border-radius: 8px;
             border: none;
+            font-size: 1rem;
+        }
+
+        input {
+            background: #1E1E2F;
+            color: #EAEAEA;
+            border: 2px solid #FFD700;
+        }
+
+        select {
+            background: #1E1E2F;
+            color: #EAEAEA;
+            border: 2px solid #FFD700;
+            cursor: pointer;
         }
 
         button {
@@ -41,35 +66,80 @@
             color: #1E1E2F;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
 
         button:hover {
             background: #E6C200;
+            transform: translateY(-2px);
         }
 
         .preview {
-            margin-top: 20px;
+            margin-top: 25px;
+            padding: 15px;
+            background: #1E1E2F;
+            border-radius: 10px;
+            border: 2px dashed #FFD700;
+        }
+
+        #status {
+            margin: 15px 0;
+            font-weight: bold;
+            color: #FFD700;
+            min-height: 24px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: #FFD700;
+            color: #1E1E2F;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .download-btn:hover {
+            background: #E6C200;
+            transform: translateY(-2px);
+        }
+
+        .converted-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #FFD700;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Image Converter</h2>
+        <h2>🖼️ Image Converter</h2>
         <input type="file" id="imageInput" accept="image/*">
         <select id="formatSelect">
             <option value="png">PNG</option>
-            <option value="jpg">JPG</option>
+            <option value="jpeg">JPG</option>
             <option value="webp">WEBP</option>
         </select>
         <button onclick="convertImage()">Convert Image</button>
         <p id="status"></p>
-        <div class="preview" id="previewContainer"></div>
+        <div class="preview" id="previewContainer">
+            <p>Upload an image to see preview</p>
+        </div>
     </div>
 
     <script>
         function convertImage() {
             const fileInput = document.getElementById('imageInput');
-            const format = document.getElementById('formatSelect').value;
+            const formatSelect = document.getElementById('formatSelect');
             const status = document.getElementById('status');
             const previewContainer = document.getElementById('previewContainer');
 
@@ -78,13 +148,23 @@
                 return;
             }
 
-            status.textContent = 'Processing image...';
+            status.textContent = '🔄 Processing image...';
             const file = fileInput.files[0];
+            const format = formatSelect.value;
+            
+            // Correct MIME type for each format
+            const mimeTypes = {
+                'png': 'image/png',
+                'jpeg': 'image/jpeg',
+                'webp': 'image/webp'
+            };
+
             const reader = new FileReader();
 
             reader.onload = function (event) {
                 const img = new Image();
                 img.src = event.target.result;
+                
                 img.onload = function () {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
@@ -92,27 +172,57 @@
                     canvas.height = img.height;
                     ctx.drawImage(img, 0, 0);
                     
-                    const convertedImage = canvas.toDataURL(`image/${format}`);
-                    previewContainer.innerHTML = `<img src="${convertedImage}" style="max-width: 100%; border-radius: 5px; margin-top: 10px;">`;
-                    const downloadBtn = document.createElement('a');
-                    downloadBtn.href = convertedImage;
-                    downloadBtn.download = `converted_image.${format}`;
-                    downloadBtn.textContent = 'Download Image';
-                    downloadBtn.style.display = 'block';
-                    downloadBtn.style.background = '#FFD700';
-                    downloadBtn.style.color = '#1E1E2F';
-                    downloadBtn.style.padding = '10px';
-                    downloadBtn.style.marginTop = '10px';
-                    downloadBtn.style.textDecoration = 'none';
-                    downloadBtn.style.borderRadius = '5px';
-                    previewContainer.appendChild(downloadBtn);
-                    status.textContent = '';
+                    // Use correct MIME type
+                    const mimeType = mimeTypes[format];
+                    const convertedImage = canvas.toDataURL(mimeType, 0.9);
+                    
+                    // Display converted image
+                    previewContainer.innerHTML = `
+                        <h3>✅ Converted Image (${format.toUpperCase()})</h3>
+                        <img src="${convertedImage}" class="converted-image" alt="Converted Image">
+                        <br>
+                        <a href="${convertedImage}" download="converted_image.${format}" class="download-btn">
+                            📥 Download ${format.toUpperCase()} Image
+                        </a>
+                    `;
+                    
+                    status.textContent = '✅ Conversion completed!';
+                };
+                
+                img.onerror = function() {
+                    status.textContent = '❌ Error loading image';
+                    alert('Error loading the image. Please try another image.');
                 };
             };
+            
+            reader.onerror = function() {
+                status.textContent = '❌ Error reading file';
+                alert('Error reading the file. Please try again.');
+            };
+            
             reader.readAsDataURL(file);
         }
+
+        // Add event listener for file input change
+        document.getElementById('imageInput').addEventListener('change', function() {
+            const status = document.getElementById('status');
+            const previewContainer = document.getElementById('previewContainer');
+            
+            if (this.files.length) {
+                status.textContent = '📁 Image selected';
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `
+                        <h3>📷 Original Image Preview</h3>
+                        <img src="${e.target.result}" class="converted-image" alt="Original Image">
+                        <p>Ready for conversion</p>
+                    `;
+                };
+                
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
     </script>
 </body>
 </html>
-
-  
