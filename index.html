@@ -504,11 +504,11 @@
             <div class="category-section">
                 <h3 class="category-title">Image Tools</h3>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool-name="Image Converter">
+                    <div class="tool-card" data-tool-name="All-in-One Converter">
                         <div class="tool-icon">🖼️</div>
-                        <h4 class="tool-name">Image Converter</h4>
-                        <p class="tool-desc">Convert images between different formats with ease.</p>
-                        <a href="image-converter.html" class="btn tool-btn">Use Tool</a>
+                        <h4 class="tool-name">All-in-One Converter</h4>
+                        <p class="tool-desc">Convert images, documents, audio, video across 150+ formats.</p>
+    <a href="image-converter.html" class="btn tool-btn">Use Tool</a>
                     </div>
                     <div class="tool-card" data-tool-name="Image Compressor">
                         <div class="tool-icon">📦</div>
@@ -791,7 +791,7 @@ document.querySelectorAll('.tool-btn').forEach(button => {
         const toolName = this.parentElement.querySelector('.tool-name').textContent;
         
         // Check if it's Image Converter
-        if (toolName === "Image Converter") {
+        if (toolName === "All-in-One Converter") {
             window.location.href = "image-converter.html";
         } 
         // For other tools, show coming soon message
