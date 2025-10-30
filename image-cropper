@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Image Cropper | Free Photo Crop Tool – seotools.site</title>
+    <meta name="description" content="Crop, rotate, and resize your images online instantly. 100% free, secure, and easy to use.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css">
+    <style>
+        :root {
+            --primary-gradient-start: #6A5ACD;
+            --primary-gradient-end: #7B68EE;
+            --accent-color: #4A90E2;
+            --background-color: #F9FAFB;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #E5E7EB;
+            --card-bg: #FFFFFF;
+            --shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
+        }
+
+        .dark-mode {
+            --background-color: #1F1F1F;
+            --card-bg: #2D2D2D;
+            --text-primary: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --border-color: #444444;
+            --shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary-gradient-start), var(--primary-gradient-end));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Crop Area */
+        .crop-area {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .crop-area-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-color);
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .upload-area h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #3a7bc8;
+        }
+
+        .image-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #image-to-crop {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel-section {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .panel-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title i {
+            color: var(--accent-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .aspect-ratio-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .ratio-btn {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ratio-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .ratio-btn:hover:not(.active) {
+            background: var(--border-color);
+        }
+
+        .tool-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .tool-btn {
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tool-btn i {
+            font-size: 18px;
+            color: var(--accent-color);
+        }
+
+        .tool-btn:hover {
+            background: var(--border-color);
+        }
+
+        .quality-slider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quality-value {
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .download-btn {
+            background: var(--text-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+
+        .download-btn:hover {
+            background: #555;
+        }
+
+        .download-btn i {
+            font-size: 18px;
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .preview-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .preview-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .preview-box {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .preview-box h4 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 120px;
+            background: var(--background-color);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .preview-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 30px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-actions {
+                display: flex;
+                gap: 10px;
+            }
+
+            .tool-buttons {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .aspect-ratio-options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tool-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .aspect-ratio-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .preview-container {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading Indicator */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .loading i {
+            font-size: 40px;
+            color: var(--accent-color);
+        }
+
+        .loading p {
+            color: var(--text-primary);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        /* Image Info */
+        .image-info {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Online Image Cropper</h1>
+                    <p>Crop, resize, and adjust your images online — fast, free, and secure.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Main Page
+                    </button>
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="crop-area">
+                <h2 class="crop-area-title">Crop Area</h2>
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-crop-alt"></i>
+                    <h3>Upload your image to start cropping</h3>
+                    <p>Drag & drop your photo here or click to browse from your device.</p>
+                    <button class="upload-btn" id="upload-btn">Choose Image File</button>
+                    <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,.gif,.bmp,.tiff,.tif,.ico,.svg,.avif,.heic,.heif,.psd,.raw,.cr2,.cr3,.nef,.arw,.dng" style="display: none;">
+                </div>
+                <div class="image-container" id="image-container">
+                    <div class="loading" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Processing image...</p>
+                    </div>
+                    <img id="image-to-crop" src="" alt="Image to crop">
+                </div>
+                <div class="image-info" id="image-info">
+                    <div class="info-item">
+                        <span>Original Size:</span>
+                        <span id="original-size">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Crop Size:</span>
+                        <span id="crop-size">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Aspect Ratio:</span>
+                        <span id="aspect-ratio">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-panel">
+                <div class="panel-section">
+                    <h3 class="section-title"><i class="fas fa-crop"></i> Crop Settings</h3>
+                    <div class="form-group">
+                        <label for="aspect-ratio-select">Aspect Ratio</label>
+                        <select id="aspect-ratio-select">
+                            <option value="free">Free</option>
+                            <option value="1:1">1:1 (Square)</option>
+                            <option value="16:9">16:9 (Widescreen)</option>
+                            <option value="4:3">4:3 (Standard)</option>
+                            <option value="3:2">3:2 (Photo)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="custom-ratio-group" style="display: none;">
+                        <label for="custom-ratio">Custom Ratio (width:height)</label>
+                        <input type="text" id="custom-ratio" placeholder="e.g., 5:4">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="lock-aspect-ratio"> Lock Aspect Ratio
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="section-title"><i class="fas fa-sliders-h"></i> Image Adjustments</h3>
+                    <div class="tool-buttons">
+                        <div class="tool-btn" id="zoom-in" data-tooltip="Zoom In (Z)">
+                            <i class="fas fa-search-plus"></i>
+                            <span>Zoom In</span>
+                        </div>
+                        <div class="tool-btn" id="zoom-out" data-tooltip="Zoom Out (X)">
+                            <i class="fas fa-search-minus"></i>
+                            <span>Zoom Out</span>
+                        </div>
+                        <div class="tool-btn" id="rotate-left" data-tooltip="Rotate Left (R)">
+                            <i class="fas fa-undo"></i>
+                            <span>Rotate Left</span>
+                        </div>
+                        <div class="tool-btn" id="rotate-right" data-tooltip="Rotate Right (T)">
+                            <i class="fas fa-redo"></i>
+                            <span>Rotate Right</span>
+                        </div>
+                        <div class="tool-btn" id="flip-horizontal" data-tooltip="Flip Horizontal (H)">
+                            <i class="fas fa-arrows-alt-h"></i>
+                            <span>Flip H</span>
+                        </div>
+                        <div class="tool-btn" id="flip-vertical" data-tooltip="Flip Vertical (V)">
+                            <i class="fas fa-arrows-alt-v"></i>
+                            <span>Flip V</span>
+                        </div>
+                        <div class="tool-btn" id="reset" data-tooltip="Reset (Ctrl+Z)">
+                            <i class="fas fa-sync"></i>
+                            <span>Reset</span>
+                        </div>
+                        <div class="tool-btn" id="undo" data-tooltip="Undo (Ctrl+Z)">
+                            <i class="fas fa-undo"></i>
+                            <span>Undo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="section-title"><i class="fas fa-download"></i> Output Settings</h3>
+                    <div class="form-group">
+                        <label for="output-format">Output Format</label>
+                        <select id="output-format">
+                            <option value="image/jpeg">JPG</option>
+                            <option value="image/jpeg">JPEG</option>
+                            <option value="image/png">PNG</option>
+                            <option value="image/webp">WEBP</option>
+                            <option value="image/gif">GIF</option>
+                            <option value="image/bmp">BMP</option>
+                            <option value="image/tiff">TIFF</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quality">Quality: <span id="quality-value" class="quality-value">85%</span></label>
+                        <div class="quality-slider">
+                            <input type="range" id="quality" min="50" max="100" value="85">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="download-btn" id="download-btn">
+                    <i class="fas fa-download"></i>
+                    Download Cropped Image
+                </button>
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <h3 class="preview-title">Preview</h3>
+            <div class="preview-container">
+                <div class="preview-box">
+                    <h4>Original Image</h4>
+                    <div class="preview-image" id="original-preview">
+                        <i class="fas fa-image" style="color: var(--text-secondary); font-size: 24px;"></i>
+                    </div>
+                </div>
+                <div class="preview-box">
+                    <h4>Cropped Preview</h4>
+                    <div class="preview-image" id="cropped-preview">
+                        <i class="fas fa-crop-alt" style="color: var(--text-secondary); font-size: 24px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 seotools.site - All rights reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let cropper;
+        let currentImage = null;
+        let historyStack = [];
+        let historyIndex = -1;
+
+        // DOM elements
+        const uploadArea = document.getElementById('upload-area');
+        const uploadBtn = document.getElementById('upload-btn');
+        const fileInput = document.getElementById('file-input');
+        const imageContainer = document.getElementById('image-container');
+        const imageToCrop = document.getElementById('image-to-crop');
+        const loading = document.getElementById('loading');
+        const aspectRatioSelect = document.getElementById('aspect-ratio-select');
+        const customRatioGroup = document.getElementById('custom-ratio-group');
+        const customRatioInput = document.getElementById('custom-ratio');
+        const lockAspectRatio = document.getElementById('lock-aspect-ratio');
+        const zoomInBtn = document.getElementById('zoom-in');
+        const zoomOutBtn = document.getElementById('zoom-out');
+        const rotateLeftBtn = document.getElementById('rotate-left');
+        const rotateRightBtn = document.getElementById('rotate-right');
+        const flipHorizontalBtn = document.getElementById('flip-horizontal');
+        const flipVerticalBtn = document.getElementById('flip-vertical');
+        const resetBtn = document.getElementById('reset');
+        const undoBtn = document.getElementById('undo');
+        const outputFormat = document.getElementById('output-format');
+        const qualitySlider = document.getElementById('quality');
+        const qualityValue = document.getElementById('quality-value');
+        const downloadBtn = document.getElementById('download-btn');
+        const originalPreview = document.getElementById('original-preview');
+        const croppedPreview = document.getElementById('cropped-preview');
+        const themeToggle = document.getElementById('theme-toggle');
+        const imageInfo = document.getElementById('image-info');
+        const originalSize = document.getElementById('original-size');
+        const cropSize = document.getElementById('crop-size');
+        const aspectRatio = document.getElementById('aspect-ratio');
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init() {
+            // Upload functionality
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--accent-color)';
+                uploadArea.style.backgroundColor = 'rgba(74, 144, 226, 0.05)';
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = 'var(--border-color)';
+                uploadArea.style.backgroundColor = 'transparent';
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--border-color)';
+                uploadArea.style.backgroundColor = 'transparent';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileSelect();
+                }
+            });
+
+            // Aspect ratio controls
+            aspectRatioSelect.addEventListener('change', handleAspectRatioChange);
+            customRatioInput.addEventListener('input', handleCustomRatioChange);
+            lockAspectRatio.addEventListener('change', handleLockAspectRatio);
+
+            // Image adjustment controls
+            zoomInBtn.addEventListener('click', () => cropper.zoom(0.1));
+            zoomOutBtn.addEventListener('click', () => cropper.zoom(-0.1));
+            rotateLeftBtn.addEventListener('click', () => cropper.rotate(-90));
+            rotateRightBtn.addEventListener('click', () => cropper.rotate(90));
+            flipHorizontalBtn.addEventListener('click', () => cropper.scaleX(-cropper.getData().scaleX || -1));
+            flipVerticalBtn.addEventListener('click', () => cropper.scaleY(-cropper.getData().scaleY || -1));
+            resetBtn.addEventListener('click', resetCropper);
+            undoBtn.addEventListener('click', undoAction);
+
+            // Output settings
+            qualitySlider.addEventListener('input', () => {
+                qualityValue.textContent = `${qualitySlider.value}%`;
+            });
+
+            // Download button
+            downloadBtn.addEventListener('click', downloadCroppedImage);
+
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+
+            // Initialize with empty state
+            updateDownloadButton(false);
+        }
+
+        // Handle file selection
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            // Check if file is an image
+            if (!file.type.match('image.*')) {
+                alert('Please select a valid image file.');
+                return;
+            }
+
+            // Show loading indicator
+            loading.style.display = 'flex';
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                // Create a new image to get dimensions
+                const img = new Image();
+                img.onload = function() {
+                    // Update image info
+                    originalSize.textContent = `${img.width} × ${img.height} px`;
+                    imageInfo.style.display = 'block';
+                    
+                    // Set image source and show container
+                    imageToCrop.src = e.target.result;
+                    uploadArea.style.display = 'none';
+                    imageContainer.style.display = 'block';
+                    
+                    // Initialize cropper
+                    initCropper();
+                    
+                    // Update preview
+                    updateOriginalPreview(e.target.result);
+                    
+                    // Hide loading indicator
+                    loading.style.display = 'none';
+                    
+                    // Enable download button
+                    updateDownloadButton(true);
+                    
+                    // Save to history
+                    saveToHistory();
+                };
+                img.src = e.target.result;
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // Initialize cropper.js
+        function initCropper() {
+            if (cropper) {
+                cropper.destroy();
+            }
+            
+            cropper = new Cropper(imageToCrop, {
+                viewMode: 1,
+                dragMode: 'crop',
+                initialAspectRatio: NaN, // Free ratio by default
+                aspectRatio: NaN,
+                autoCropArea: 0.8,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+                ready: function() {
+                    // Update crop info when ready
+                    updateCropInfo();
+                    
+                    // Add event listener for crop events
+                    this.cropper.element.addEventListener('crop', updateCropInfo);
+                    this.cropper.element.addEventListener('cropmove', updateCropInfo);
+                }
+            });
+        }
+
+        // Handle aspect ratio change
+        function handleAspectRatioChange() {
+            const value = aspectRatioSelect.value;
+            
+            if (value === 'custom') {
+                customRatioGroup.style.display = 'block';
+                return;
+            } else {
+                customRatioGroup.style.display = 'none';
+            }
+            
+            let ratio = NaN; // Free ratio
+            
+            if (value !== 'free') {
+                const parts = value.split(':');
+                ratio = parseFloat(parts[0]) / parseFloat(parts[1]);
+            }
+            
+            if (cropper) {
+                cropper.setAspectRatio(ratio);
+                updateCropInfo();
+            }
+        }
+
+        // Handle custom ratio change
+        function handleCustomRatioChange() {
+            const value = customRatioInput.value.trim();
+            
+            if (!value) return;
+            
+            const parts = value.split(':');
+            if (parts.length !== 2) {
+                alert('Please enter a valid ratio in the format "width:height"');
+                return;
+            }
+            
+            const width = parseFloat(parts[0]);
+            const height = parseFloat(parts[1]);
+            
+            if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+                alert('Please enter valid positive numbers for width and height');
+                return;
+            }
+            
+            const ratio = width / height;
+            
+            if (cropper) {
+                cropper.setAspectRatio(ratio);
+                updateCropInfo();
+            }
+        }
+
+        // Handle lock aspect ratio
+        function handleLockAspectRatio() {
+            if (cropper) {
+                const isLocked = lockAspectRatio.checked;
+                cropper.setAspectRatio(isLocked ? cropper.getData().aspectRatio : NaN);
+            }
+        }
+
+        // Reset cropper to original state
+        function resetCropper() {
+            if (cropper) {
+                cropper.reset();
+                aspectRatioSelect.value = 'free';
+                customRatioGroup.style.display = 'none';
+                lockAspectRatio.checked = false;
+                updateCropInfo();
+                saveToHistory();
+            }
+        }
+
+        // Update crop information
+        function updateCropInfo() {
+            if (!cropper) return;
+            
+            const data = cropper.getData();
+            cropSize.textContent = `${Math.round(data.width)} × ${Math.round(data.height)} px`;
+            aspectRatio.textContent = data.aspectRatio ? data.aspectRatio.toFixed(2) : 'Free';
+            
+            // Update cropped preview
+            updateCroppedPreview();
+        }
+
+        // Update original preview
+        function updateOriginalPreview(src) {
+            originalPreview.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = src;
+            originalPreview.appendChild(img);
+        }
+
+        // Update cropped preview
+        function updateCroppedPreview() {
+            if (!cropper) return;
+            
+            const canvas = cropper.getCroppedCanvas({
+                width: 150,
+                height: 100
+            });
+            
+            if (canvas) {
+                croppedPreview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = canvas.toDataURL();
+                croppedPreview.appendChild(img);
+            }
+        }
+
+        // Download cropped image
+        function downloadCroppedImage() {
+            if (!cropper) {
+                alert('Please upload an image first.');
+                return;
+            }
+            
+            const format = outputFormat.value;
+            const quality = parseInt(qualitySlider.value) / 100;
+            
+            // Get cropped canvas
+            const canvas = cropper.getCroppedCanvas();
+            
+            if (!canvas) {
+                alert('Please select a crop area.');
+                return;
+            }
+            
+            // Convert to blob and create download link
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                
+                // Set filename with appropriate extension
+                const extension = getExtensionFromMimeType(format);
+                a.download = `cropped-image.${extension}`;
+                
+                // Trigger download
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // Clean up
+                URL.revokeObjectURL(url);
+            }, format, quality);
+        }
+
+        // Get file extension from MIME type
+        function getExtensionFromMimeType(mimeType) {
+            const extensions = {
+                'image/jpeg': 'jpg',
+                'image/png': 'png',
+                'image/webp': 'webp',
+                'image/gif': 'gif',
+                'image/bmp': 'bmp',
+                'image/tiff': 'tiff'
+            };
+            
+            return extensions[mimeType] || 'jpg';
+        }
+
+        // Update download button state
+        function updateDownloadButton(enabled) {
+            downloadBtn.disabled = !enabled;
+            if (enabled) {
+                downloadBtn.style.opacity = '1';
+                downloadBtn.style.cursor = 'pointer';
+            } else {
+                downloadBtn.style.opacity = '0.6';
+                downloadBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        // Toggle dark/light theme
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // Handle keyboard shortcuts
+        function handleKeyboardShortcuts(e) {
+            // Only process if no input is focused
+            if (document.activeElement.tagName === 'INPUT') return;
+            
+            // Check for Ctrl/Cmd key
+            const isCtrl = e.ctrlKey || e.metaKey;
+            
+            switch(e.key.toLowerCase()) {
+                case 'z':
+                    if (isCtrl) {
+                        e.preventDefault();
+                        undoAction();
+                    }
+                    break;
+                case 'r':
+                    e.preventDefault();
+                    cropper.rotate(-90);
+                    break;
+                case 't':
+                    e.preventDefault();
+                    cropper.rotate(90);
+                    break;
+                case 'h':
+                    e.preventDefault();
+                    cropper.scaleX(-cropper.getData().scaleX || -1);
+                    break;
+                case 'v':
+                    e.preventDefault();
+                    cropper.scaleY(-cropper.getData().scaleY || -1);
+                    break;
+                case 'z':
+                    if (!isCtrl) {
+                        e.preventDefault();
+                        cropper.zoom(0.1);
+                    }
+                    break;
+                case 'x':
+                    e.preventDefault();
+                    cropper.zoom(-0.1);
+                    break;
+            }
+        }
+
+        // Save current state to history
+        function saveToHistory() {
+            if (!cropper) return;
+            
+            // Remove any future states if we're not at the end
+            if (historyIndex < historyStack.length - 1) {
+                historyStack = historyStack.slice(0, historyIndex + 1);
+            }
+            
+            // Save current state
+            historyStack.push(cropper.getData());
+            historyIndex = historyStack.length - 1;
+            
+            // Limit history size
+            if (historyStack.length > 20) {
+                historyStack.shift();
+                historyIndex--;
+            }
+            
+            // Update undo button state
+            updateUndoButton();
+        }
+
+        // Undo last action
+        function undoAction() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                const data = historyStack[historyIndex];
+                cropper.setData(data);
+                updateCropInfo();
+                updateUndoButton();
+            }
+        }
+
+        // Update undo button state
+        function updateUndoButton() {
+            undoBtn.style.opacity = historyIndex > 0 ? '1' : '0.5';
+            undoBtn.style.cursor = historyIndex > 0 ? 'pointer' : 'not-allowed';
+        }
+    </script>
+</body>
+</html>
