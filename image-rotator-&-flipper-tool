@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Rotator & Flipper Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6cf7;
+            --bg-color: #f5f6fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e1e5ee;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(74, 108, 247, 0.02);
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .upload-area h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: #3a5ce5;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+            transform: none;
+        }
+
+        .preview-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .preview-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .image-preview {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+
+        .slider-container {
+            margin-top: 15px;
+        }
+
+        .slider-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #e1e5ee;
+            outline: none;
+        }
+
+        .angle-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .image-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .preview-wrapper {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌀 Image Rotator & Flipper Tool</h1>
+            <p class="subtitle">Free Online - Rotate and flip your images with ease</p>
+        </header>
+
+        <div class="card">
+            <div class="upload-area" id="uploadArea">
+                <i data-lucide="upload"></i>
+                <h3>Drop your image here or click to browse</h3>
+                <p>Supports JPG, PNG, WEBP, and more</p>
+                <button class="btn" id="chooseFileBtn">Choose Image Files</button>
+                <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp" class="hidden">
+            </div>
+
+            <div class="preview-container" id="previewContainer">
+                <div class="preview-wrapper">
+                    <div class="image-preview">
+                        <canvas id="imageCanvas"></canvas>
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <h3>Rotate Controls</h3>
+                            <div class="button-group">
+                                <button class="btn btn-outline btn-icon" id="rotateLeftBtn">
+                                    <i data-lucide="rotate-ccw"></i> Left (-90°)
+                                </button>
+                                <button class="btn btn-outline btn-icon" id="rotateRightBtn">
+                                    <i data-lucide="rotate-cw"></i> Right (+90°)
+                                </button>
+                                <button class="btn btn-outline btn-icon" id="resetRotationBtn">
+                                    <i data-lucide="refresh-cw"></i> Reset
+                                </button>
+                            </div>
+                            <div class="slider-container">
+                                <label for="angleSlider">Custom Rotation Angle</label>
+                                <div class="slider-wrapper">
+                                    <input type="range" id="angleSlider" min="0" max="360" value="0">
+                                    <span class="angle-value" id="angleValue">0°</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <h3>Flip Controls</h3>
+                            <div class="button-group">
+                                <button class="btn btn-outline btn-icon" id="flipHorizontalBtn">
+                                    <i data-lucide="flip-horizontal"></i> Horizontal
+                                </button>
+                                <button class="btn btn-outline btn-icon" id="flipVerticalBtn">
+                                    <i data-lucide="flip-vertical"></i> Vertical
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="image-info">
+                            <div class="info-item">
+                                <i data-lucide="ruler"></i>
+                                <span id="dimensionsInfo">Dimensions: -</span>
+                            </div>
+                            <div class="info-item">
+                                <i data-lucide="hard-drive"></i>
+                                <span id="sizeInfo">Size: -</span>
+                            </div>
+                            <div class="info-item">
+                                <i data-lucide="image"></i>
+                                <span id="formatInfo">Format: -</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn" id="downloadBtn">
+                        <i data-lucide="download"></i> Download Image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Lucide icons
+            lucide.createIcons();
+            
+            // DOM elements
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const chooseFileBtn = document.getElementById('chooseFileBtn');
+            const previewContainer = document.getElementById('previewContainer');
+            const imageCanvas = document.getElementById('imageCanvas');
+            const rotateLeftBtn = document.getElementById('rotateLeftBtn');
+            const rotateRightBtn = document.getElementById('rotateRightBtn');
+            const resetRotationBtn = document.getElementById('resetRotationBtn');
+            const flipHorizontalBtn = document.getElementById('flipHorizontalBtn');
+            const flipVerticalBtn = document.getElementById('flipVerticalBtn');
+            const angleSlider = document.getElementById('angleSlider');
+            const angleValue = document.getElementById('angleValue');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const dimensionsInfo = document.getElementById('dimensionsInfo');
+            const sizeInfo = document.getElementById('sizeInfo');
+            const formatInfo = document.getElementById('formatInfo');
+            
+            // Canvas context
+            const ctx = imageCanvas.getContext('2d');
+            
+            // Image state
+            let originalImage = null;
+            let currentRotation = 0;
+            let isFlippedHorizontal = false;
+            let isFlippedVertical = false;
+            let currentAngle = 0;
+            let originalWidth = 0;
+            let originalHeight = 0;
+            let fileSize = 0;
+            let fileFormat = '';
+            
+            // Event listeners
+            chooseFileBtn.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('drop', handleDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+            rotateLeftBtn.addEventListener('click', rotateLeft);
+            rotateRightBtn.addEventListener('click', rotateRight);
+            resetRotationBtn.addEventListener('click', resetRotation);
+            flipHorizontalBtn.addEventListener('click', flipHorizontal);
+            flipVerticalBtn.addEventListener('click', flipVertical);
+            angleSlider.addEventListener('input', handleAngleChange);
+            downloadBtn.addEventListener('click', downloadImage);
+            
+            // Functions
+            function handleDragOver(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#4a6cf7';
+                uploadArea.style.backgroundColor = 'rgba(74, 108, 247, 0.05)';
+            }
+            
+            function handleDrop(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#e1e5ee';
+                uploadArea.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files.length) {
+                    const file = e.dataTransfer.files[0];
+                    if (isValidImageFile(file)) {
+                        loadImage(file);
+                    } else {
+                        alert('Please select a valid image file (JPG, PNG, or WEBP).');
+                    }
+                }
+            }
+            
+            function handleFileSelect(e) {
+                if (e.target.files.length) {
+                    const file = e.target.files[0];
+                    if (isValidImageFile(file)) {
+                        loadImage(file);
+                    } else {
+                        alert('Please select a valid image file (JPG, PNG, or WEBP).');
+                    }
+                }
+            }
+            
+            function isValidImageFile(file) {
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+                return validTypes.includes(file.type);
+            }
+            
+            function loadImage(file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    originalImage = new Image();
+                    originalImage.onload = function() {
+                        originalWidth = originalImage.width;
+                        originalHeight = originalImage.height;
+                        fileSize = file.size;
+                        fileFormat = file.type.split('/')[1].toUpperCase();
+                        
+                        updateImageInfo();
+                        resetTransformations();
+                        drawImage();
+                        
+                        previewContainer.style.display = 'block';
+                    };
+                    originalImage.src = e.target.result;
+                };
+                
+                reader.readAsDataURL(file);
+            }
+            
+            function updateImageInfo() {
+                dimensionsInfo.textContent = `Dimensions: ${originalWidth} × ${originalHeight}`;
+                sizeInfo.textContent = `Size: ${formatFileSize(fileSize)}`;
+                formatInfo.textContent = `Format: ${fileFormat}`;
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            function resetTransformations() {
+                currentRotation = 0;
+                isFlippedHorizontal = false;
+                isFlippedVertical = false;
+                currentAngle = 0;
+                angleSlider.value = 0;
+                angleValue.textContent = '0°';
+            }
+            
+            function drawImage() {
+                if (!originalImage) return;
+                
+                // Calculate canvas size based on rotation
+                let displayWidth, displayHeight;
+                
+                if (currentRotation % 180 === 0) {
+                    displayWidth = originalWidth;
+                    displayHeight = originalHeight;
+                } else {
+                    displayWidth = originalHeight;
+                    displayHeight = originalWidth;
+                }
+                
+                // Set canvas size
+                imageCanvas.width = displayWidth;
+                imageCanvas.height = displayHeight;
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+                
+                // Set transformation origin to center
+                ctx.save();
+                ctx.translate(imageCanvas.width / 2, imageCanvas.height / 2);
+                
+                // Apply rotation
+                ctx.rotate((currentRotation + currentAngle) * Math.PI / 180);
+                
+                // Apply flipping
+                let scaleX = isFlippedHorizontal ? -1 : 1;
+                let scaleY = isFlippedVertical ? -1 : 1;
+                ctx.scale(scaleX, scaleY);
+                
+                // Draw image
+                ctx.drawImage(
+                    originalImage, 
+                    -originalWidth / 2, 
+                    -originalHeight / 2, 
+                    originalWidth, 
+                    originalHeight
+                );
+                
+                ctx.restore();
+            }
+            
+            function rotateLeft() {
+                currentRotation -= 90;
+                if (currentRotation < 0) currentRotation += 360;
+                drawImage();
+            }
+            
+            function rotateRight() {
+                currentRotation += 90;
+                if (currentRotation >= 360) currentRotation -= 360;
+                drawImage();
+            }
+            
+            function resetRotation() {
+                resetTransformations();
+                drawImage();
+            }
+            
+            function flipHorizontal() {
+                isFlippedHorizontal = !isFlippedHorizontal;
+                drawImage();
+            }
+            
+            function flipVertical() {
+                isFlippedVertical = !isFlippedVertical;
+                drawImage();
+            }
+            
+            function handleAngleChange() {
+                currentAngle = parseInt(angleSlider.value);
+                angleValue.textContent = `${currentAngle}°`;
+                drawImage();
+            }
+            
+            function downloadImage() {
+                if (!originalImage) return;
+                
+                const link = document.createElement('a');
+                link.download = `rotated-image.${fileFormat.toLowerCase()}`;
+                link.href = imageCanvas.toDataURL(`image/${fileFormat.toLowerCase()}`);
+                link.click();
+            }
+        });
+    </script>
+</body>
+</html>
