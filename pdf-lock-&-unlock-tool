@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Lock & Unlock Tool | seotools.site</title>
+    <meta name="description" content="Fast & secure online PDF Lock/Unlock tool — add or remove passwords from PDFs easily. No software needed. AES-256 encryption and zero file retention.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(90deg, #6A5ACD, #7B68EE);
+            --accent-color: #4A90E2;
+            --background-color: #F9FAFB;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #E5E7EB;
+            --card-bg: #FFFFFF;
+            --success-color: #10B981;
+            --error-color: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tagline {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .left-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .right-panel {
+            flex: 0 0 300px;
+        }
+
+        .tool-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .tool-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area.active {
+            border-color: var(--accent-color);
+            background-color: rgba(74, 144, 226, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .upload-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .upload-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: #3a7bc8;
+        }
+
+        /* File List */
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .file-icon {
+            color: var(--accent-color);
+        }
+
+        .file-info {
+            flex-grow: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .action-btn:hover {
+            color: var(--accent-color);
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+
+        .settings-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        .option-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .password-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input {
+            width: 16px;
+            height: 16px;
+        }
+
+        .privacy-note {
+            background-color: #f0f9ff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        /* Action Buttons */
+        .action-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .action-btn-primary {
+            background-color: #374151;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .action-btn-primary:hover {
+            background-color: #4B5563;
+        }
+
+        .action-btn-primary:disabled {
+            background-color: #9CA3AF;
+            cursor: not-allowed;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: #E5E7EB;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Messages */
+        .success-message {
+            background-color: #D1FAE5;
+            color: #065F46;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message {
+            background-color: #FEE2E2;
+            color: #991B1B;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-icon {
+            font-size: 18px;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin-top: 40px;
+        }
+
+        .faq-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .faq-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .right-panel {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <button class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Main Page
+                </button>
+                <div class="logo">seotools.site</div>
+            </div>
+            <div class="tagline">Convert images, documents, audio, video across 150+ formats with professional quality</div>
+        </div>
+    </header>
+
+    <main class="main-content container">
+        <div class="left-panel">
+            <div class="tool-card">
+                <h1 class="tool-title">PDF Lock & Unlock</h1>
+                <p class="tool-description">Lock or unlock your PDF files with a password — no software installation required. With strong encryption, zero file retention, and bulk support, protecting sensitive documents is now easier than ever.</p>
+                
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="upload-title">Drop your PDF files here or click to browse</div>
+                    <div class="upload-subtitle">Lock or unlock PDF files — Fast, Secure & Free to Use</div>
+                    <button class="upload-btn">Choose PDF Files</button>
+                    <input type="file" id="file-input" accept=".pdf" multiple style="display: none;">
+                </div>
+
+                <div class="file-list" id="file-list"></div>
+
+                <div class="progress-container" id="progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">Processing your files...</div>
+                </div>
+
+                <div class="success-message" id="success-message">
+                    <i class="fas fa-check-circle message-icon"></i>
+                    <span id="success-text">Your PDF is locked — download now!</span>
+                </div>
+
+                <div class="error-message" id="error-message">
+                    <i class="fas fa-exclamation-circle message-icon"></i>
+                    <span id="error-text">Incorrect password — please try again.</span>
+                </div>
+
+                <div class="action-container">
+                    <button class="action-btn-primary" id="lock-btn" disabled>
+                        <i class="fas fa-lock"></i> Lock PDF
+                    </button>
+                    <button class="action-btn-primary" id="unlock-btn" disabled>
+                        <i class="fas fa-unlock"></i> Unlock PDF
+                    </button>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="faq-title">Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Do you store uploaded files on your server?</div>
+                    <div class="faq-answer">No, all files are automatically deleted after processing. We don't store any of your documents.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What's the maximum file size?</div>
+                    <div class="faq-answer">You can process PDF files up to 100 MB in size.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Can I process multiple files at once?</div>
+                    <div class="faq-answer">Yes, bulk processing is supported. You can upload and process multiple PDF files simultaneously.</div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Is the encryption secure?</div>
+                    <div class="faq-answer">Yes, we use AES-256 encryption, which is the industry standard for secure document protection.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="settings-panel">
+                <h3 class="settings-title">Security Settings</h3>
+                
+                <div class="option-group">
+                    <label class="option-label">Operation Type</label>
+                    <div class="checkbox-group">
+                        <input type="radio" id="lock-option" name="operation" value="lock" checked>
+                        <label for="lock-option">Lock PDF (Add Password)</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="radio" id="unlock-option" name="operation" value="unlock">
+                        <label for="unlock-option">Unlock PDF (Remove Password)</label>
+                    </div>
+                </div>
+                
+                <div class="option-group" id="password-section">
+                    <label class="option-label" for="password">Password</label>
+                    <input type="password" class="password-input" id="password" placeholder="Enter new password (min 8 characters)">
+                    <div class="password-hint">Use at least 8 characters with letters and numbers</div>
+                    
+                    <label class="option-label" for="confirm-password" style="margin-top: 15px;">Confirm Password</label>
+                    <input type="password" class="password-input" id="confirm-password" placeholder="Re-enter password">
+                </div>
+                
+                <div class="option-group" id="unlock-password-section" style="display: none;">
+                    <label class="option-label" for="existing-password">Current Password</label>
+                    <input type="password" class="password-input" id="existing-password" placeholder="Enter current PDF password">
+                </div>
+                
+                <div class="option-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="remove-metadata" checked>
+                        <label for="remove-metadata">Remove metadata before locking</label>
+                    </div>
+                </div>
+                
+                <div class="privacy-note">
+                    <i class="fas fa-shield-alt"></i> We automatically delete your files after processing.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const fileList = document.getElementById('file-list');
+        const lockBtn = document.getElementById('lock-btn');
+        const unlockBtn = document.getElementById('unlock-btn');
+        const progress = document.getElementById('progress');
+        const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
+        const successText = document.getElementById('success-text');
+        const errorText = document.getElementById('error-text');
+        
+        const lockOption = document.getElementById('lock-option');
+        const unlockOption = document.getElementById('unlock-option');
+        const passwordSection = document.getElementById('password-section');
+        const unlockPasswordSection = document.getElementById('unlock-password-section');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const existingPasswordInput = document.getElementById('existing-password');
+
+        // File storage
+        let uploadedFiles = [];
+
+        // Upload area interactions
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('active');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('active');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('active');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFiles(files);
+            }
+        });
+
+        // File input change handler
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFiles(e.target.files);
+            }
+        });
+
+        // Operation type change handler
+        lockOption.addEventListener('change', updateOperationUI);
+        unlockOption.addEventListener('change', updateOperationUI);
+
+        // Password validation
+        passwordInput.addEventListener('input', validatePasswords);
+        confirmPasswordInput.addEventListener('input', validatePasswords);
+        existingPasswordInput.addEventListener('input', updateUnlockButton);
+
+        // Handle file uploads
+        function handleFiles(files) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.type === 'application/pdf') {
+                    uploadedFiles.push({
+                        file: file,
+                        id: Date.now() + i
+                    });
+                }
+            }
+            renderFileList();
+            updateActionButtons();
+        }
+
+        // Render file list
+        function renderFileList() {
+            fileList.innerHTML = '';
+            
+            if (uploadedFiles.length === 0) {
+                return;
+            }
+            
+            uploadedFiles.forEach((fileObj, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                fileItem.innerHTML = `
+                    <div class="file-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">${fileObj.file.name}</div>
+                        <div class="file-size">${formatFileSize(fileObj.file.size)}</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="action-btn remove-file">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                
+                fileList.appendChild(fileItem);
+                
+                const removeBtn = fileItem.querySelector('.remove-file');
+                removeBtn.addEventListener('click', () => removeFile(index));
+            });
+        }
+
+        // Remove file from list
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            renderFileList();
+            updateActionButtons();
+        }
+
+        // Update UI based on operation type
+        function updateOperationUI() {
+            if (lockOption.checked) {
+                passwordSection.style.display = 'block';
+                unlockPasswordSection.style.display = 'none';
+                lockBtn.disabled = uploadedFiles.length === 0 || !isPasswordValid();
+                unlockBtn.disabled = true;
+            } else {
+                passwordSection.style.display = 'none';
+                unlockPasswordSection.style.display = 'block';
+                lockBtn.disabled = true;
+                unlockBtn.disabled = uploadedFiles.length === 0 || !existingPasswordInput.value;
+            }
+        }
+
+        // Validate password strength
+        function isPasswordValid() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (password.length < 8) return false;
+            if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) return false;
+            if (password !== confirmPassword) return false;
+            
+            return true;
+        }
+
+        // Validate passwords and update UI
+        function validatePasswords() {
+            const isValid = isPasswordValid();
+            lockBtn.disabled = uploadedFiles.length === 0 || !isValid;
+            
+            // Show visual feedback
+            if (passwordInput.value && passwordInput.value.length < 8) {
+                passwordInput.style.borderColor = 'var(--error-color)';
+            } else {
+                passwordInput.style.borderColor = '';
+            }
+            
+            if (confirmPasswordInput.value && passwordInput.value !== confirmPasswordInput.value) {
+                confirmPasswordInput.style.borderColor = 'var(--error-color)';
+            } else {
+                confirmPasswordInput.style.borderColor = '';
+            }
+        }
+
+        // Update unlock button state
+        function updateUnlockButton() {
+            unlockBtn.disabled = uploadedFiles.length === 0 || !existingPasswordInput.value;
+        }
+
+        // Update action buttons based on files and settings
+        function updateActionButtons() {
+            if (lockOption.checked) {
+                lockBtn.disabled = uploadedFiles.length === 0 || !isPasswordValid();
+                unlockBtn.disabled = true;
+            } else {
+                lockBtn.disabled = true;
+                unlockBtn.disabled = uploadedFiles.length === 0 || !existingPasswordInput.value;
+            }
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Lock PDF files
+        lockBtn.addEventListener('click', async () => {
+            if (uploadedFiles.length === 0) return;
+            
+            progress.style.display = 'block';
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            lockBtn.disabled = true;
+            
+            try {
+                const { PDFDocument } = PDFLib;
+                
+                for (let i = 0; i < uploadedFiles.length; i++) {
+                    const file = uploadedFiles[i].file;
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdfDoc = await PDFDocument.load(arrayBuffer);
+                    
+                    // Remove metadata if option is checked
+                    if (document.getElementById('remove-metadata').checked) {
+                        pdfDoc.setTitle('');
+                        pdfDoc.setAuthor('');
+                        pdfDoc.setSubject('');
+                        pdfDoc.setCreator('');
+                        pdfDoc.setProducer('');
+                        pdfDoc.setCreationDate(new Date());
+                        pdfDoc.setModificationDate(new Date());
+                    }
+                    
+                    // Encrypt the PDF
+                    const password = passwordInput.value;
+                    await pdfDoc.encrypt({
+                        userPassword: password,
+                        ownerPassword: password,
+                        permissions: {
+                            printing: 'lowResolution',
+                            modifying: false,
+                            copying: false,
+                            annotating: false,
+                            fillingForms: false,
+                            contentAccessibility: false,
+                            documentAssembly: false
+                        }
+                    });
+                    
+                    const pdfBytes = await pdfDoc.save();
+                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Create download link
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `locked-${file.name}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    // Update progress
+                    const progressFill = progress.querySelector('.progress-fill');
+                    progressFill.style.width = `${((i + 1) / uploadedFiles.length) * 100}%`;
+                }
+                
+                // Show success message
+                progress.style.display = 'none';
+                successText.textContent = 'Your PDF is locked — download now!';
+                successMessage.style.display = 'flex';
+                lockBtn.disabled = false;
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+                
+                // Clear files after processing
+                uploadedFiles = [];
+                renderFileList();
+                updateActionButtons();
+                
+            } catch (error) {
+                console.error('Error locking PDF:', error);
+                errorText.textContent = 'An error occurred while locking the PDF files. Please try again.';
+                errorMessage.style.display = 'flex';
+                progress.style.display = 'none';
+                lockBtn.disabled = false;
+            }
+        });
+
+        // Unlock PDF files
+        unlockBtn.addEventListener('click', async () => {
+            if (uploadedFiles.length === 0) return;
+            
+            progress.style.display = 'block';
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            unlockBtn.disabled = true;
+            
+            try {
+                const { PDFDocument } = PDFLib;
+                const password = existingPasswordInput.value;
+                
+                for (let i = 0; i < uploadedFiles.length; i++) {
+                    const file = uploadedFiles[i].file;
+                    const arrayBuffer = await file.arrayBuffer();
+                    
+                    // Try to load with password
+                    const pdfDoc = await PDFDocument.load(arrayBuffer, { password: password });
+                    
+                    // Remove encryption
+                    await pdfDoc.encrypt({
+                        userPassword: '',
+                        ownerPassword: ''
+                    });
+                    
+                    const pdfBytes = await pdfDoc.save();
+                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Create download link
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `unlocked-${file.name}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    // Update progress
+                    const progressFill = progress.querySelector('.progress-fill');
+                    progressFill.style.width = `${((i + 1) / uploadedFiles.length) * 100}%`;
+                }
+                
+                // Show success message
+                progress.style.display = 'none';
+                successText.textContent = 'Your PDF is unlocked — download now!';
+                successMessage.style.display = 'flex';
+                unlockBtn.disabled = false;
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+                
+                // Clear files after processing
+                uploadedFiles = [];
+                renderFileList();
+                updateActionButtons();
+                
+            } catch (error) {
+                console.error('Error unlocking PDF:', error);
+                
+                if (error.message && error.message.includes('password')) {
+                    errorText.textContent = 'Incorrect password — please try again.';
+                } else {
+                    errorText.textContent = 'An error occurred while unlocking the PDF files. Please try again.';
+                }
+                
+                errorMessage.style.display = 'flex';
+                progress.style.display = 'none';
+                unlockBtn.disabled = false;
+            }
+        });
+
+        // Initialize UI
+        updateOperationUI();
+    </script>
+</body>
+</html>
