@@ -1069,7 +1069,40 @@ function setupAutocomplete() {
 document.addEventListener('DOMContentLoaded', function() {
     setupAutocomplete();
 });
+// New Hero Section JavaScript
+document.querySelector('.cta-button').addEventListener('click', function() {
+    document.getElementById('tools').scrollIntoView({ 
+        behavior: 'smooth' 
+    });
+});
 
+// Search functionality for new hero
+document.querySelector('.search-button').addEventListener('click', function() {
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput.value.trim() !== '') {
+        heroSearch.value = searchInput.value;
+        performSearch();
+    }
+});
+
+// Enter key for new search
+document.querySelector('.search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        document.querySelector('.search-button').click();
+    }
+});
+
+// Tool icons hover effect
+const toolIcons = document.querySelectorAll('.tool-icon');
+toolIcons.forEach(icon => {
+    icon.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+    });
+    
+    icon.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
 </script>
 </body>
 </html>
