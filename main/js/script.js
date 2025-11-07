@@ -1,107 +1,107 @@
-// Mobile menu toggle
-const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-const navLinks = document.querySelector('.nav-links');
-
-mobileMenuBtn.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-});
-
-// Explore Button - Scroll to Tools Section
-const exploreBtn = document.getElementById('exploreBtn');
-
-exploreBtn.addEventListener('click', () => {
-    document.getElementById('tools').scrollIntoView({ 
-        behavior: 'smooth' 
-    });
-});
-
-// Search Functionality
-const heroSearch = document.getElementById('heroSearch');
-const heroSearchBtn = document.getElementById('heroSearchBtn');
-const toolCards = document.querySelectorAll('.tool-card');
-
-// Remove highlights from all tools
-function removeHighlights() {
-    toolCards.forEach(card => {
-        card.classList.remove('highlighted');
-    });
-}
-
-// Search function
-function performSearch() {
-    const searchTerm = heroSearch.value.trim().toLowerCase();
-    
-    if (!searchTerm) {
-        removeHighlights();
-        return;
-    }
-
-    removeHighlights();
-    
-    let found = false;
-    toolCards.forEach(card => {
-        const toolName = card.getAttribute('data-tool-name').toLowerCase();
-        const toolTitle = card.querySelector('.tool-name').textContent.toLowerCase();
+ // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
         
-        if (toolName.includes(searchTerm) || toolTitle.includes(searchTerm)) {
-            card.classList.add('highlighted');
-            found = true;
-            
-            // Scroll to the highlighted tool
-            card.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Explore Button - Scroll to Tools Section
+        const exploreBtn = document.getElementById('exploreBtn');
+        
+        exploreBtn.addEventListener('click', () => {
+            document.getElementById('tools').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        });
+
+        // Search Functionality
+        const heroSearch = document.getElementById('heroSearch');
+        const heroSearchBtn = document.getElementById('heroSearchBtn');
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        // Remove highlights from all tools
+        function removeHighlights() {
+            toolCards.forEach(card => {
+                card.classList.remove('highlighted');
             });
         }
-    });
 
-    if (!found) {
-        alert(`No tools found for "${searchTerm}". Try searching for: Image, PDF, Calculator, Video, etc.`);
-    }
-}
-
-// Event listeners for search
-heroSearchBtn.addEventListener('click', performSearch);
-heroSearch.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        performSearch();
-    }
-});
-
-// Clear search when clicking on search input
-heroSearch.addEventListener('click', function() {
-    this.select();
-});
-
-// Smooth scrolling for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-            window.scrollTo({
-                top: targetElement.offsetTop - 80,
-                behavior: 'smooth'
-            });
+        // Search function
+        function performSearch() {
+            const searchTerm = heroSearch.value.trim().toLowerCase();
             
-            // Close mobile menu if open
-            navLinks.classList.remove('active');
-        }
-    });
-});
+            if (!searchTerm) {
+                removeHighlights();
+                return;
+            }
 
-// Tool button click handlers
+            removeHighlights();
+            
+            let found = false;
+            toolCards.forEach(card => {
+                const toolName = card.getAttribute('data-tool-name').toLowerCase();
+                const toolTitle = card.querySelector('.tool-name').textContent.toLowerCase();
+                
+                if (toolName.includes(searchTerm) || toolTitle.includes(searchTerm)) {
+                    card.classList.add('highlighted');
+                    found = true;
+                    
+                    // Scroll to the highlighted tool
+                    card.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }
+            });
+
+            if (!found) {
+                alert(`No tools found for "${searchTerm}". Try searching for: Image, PDF, Calculator, Video, etc.`);
+            }
+        }
+
+        // Event listeners for search
+        heroSearchBtn.addEventListener('click', performSearch);
+        heroSearch.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Clear search when clicking on search input
+        heroSearch.addEventListener('click', function() {
+            this.select();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+
+        // Tool button click handlers
 document.querySelectorAll('.tool-btn').forEach(button => {
     button.addEventListener('click', function() {
         const toolName = this.parentElement.querySelector('.tool-name').textContent;
         
         // Check if it's Image Converter
         if (toolName === "All-in-One Converter") {
-            window.location.href = "all-in-one-converter.html";
+    window.location.href = "all-in-one-converter.html";
         } 
         // For other tools, show coming soon message
         else {
@@ -109,6 +109,7 @@ document.querySelectorAll('.tool-btn').forEach(button => {
         }
     });
 });
+              
 
 // Autocomplete Suggestions Data
 const toolSuggestions = [
@@ -169,7 +170,6 @@ function setupAutocomplete() {
 document.addEventListener('DOMContentLoaded', function() {
     setupAutocomplete();
 });
-
 // New Hero Section JavaScript
 document.querySelector('.cta-button').addEventListener('click', function() {
     document.getElementById('tools').scrollIntoView({ 
@@ -204,3 +204,7 @@ toolIcons.forEach(icon => {
         this.style.transform = 'translateY(0)';
     });
 });
+</script>
+</body>
+</html>
+
