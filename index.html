@@ -1045,41 +1045,49 @@ function setupAutocomplete() {
 document.addEventListener('DOMContentLoaded', function() {
     setupAutocomplete();
 });
-// New Hero Section JavaScript
-document.querySelector('.cta-button').addEventListener('click', function() {
-    document.getElementById('tools').scrollIntoView({ 
-        behavior: 'smooth' 
-    });
-});
-
-// Search functionality for new hero
-document.querySelector('.search-button').addEventListener('click', function() {
-    const searchInput = document.querySelector('.search-input');
-    if (searchInput.value.trim() !== '') {
-        heroSearch.value = searchInput.value;
-        performSearch();
-    }
-});
-
-// Enter key for new search
-document.querySelector('.search-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        document.querySelector('.search-button').click();
-    }
-});
-
-// Tool icons hover effect
-const toolIcons = document.querySelectorAll('.tool-icon');
-toolIcons.forEach(icon => {
-    icon.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-5px)';
-    });
-    
-    icon.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-</script>
+  // Add smooth animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctaButton = document.querySelector('.cta-button');
+            const iconCircles = document.querySelectorAll('.icon-circle');
+            const searchButton = document.querySelector('.search-button');
+            
+            // Button hover effects
+            ctaButton.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            ctaButton.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+            
+            // Icon hover effects
+            iconCircles.forEach(icon => {
+                icon.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1)';
+                });
+                
+                icon.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Search functionality
+            searchButton.addEventListener('click', function() {
+                const searchInput = document.querySelector('.search-bar');
+                if (searchInput.value.trim() !== '') {
+                    alert(`Searching for: ${searchInput.value}`);
+                }
+            });
+            
+            // Allow Enter key to trigger search
+            document.querySelector('.search-bar').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchButton.click();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
+
 
