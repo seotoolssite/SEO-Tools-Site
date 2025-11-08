@@ -259,6 +259,15 @@
             background: #0056FF;
         }
 
+ /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-content {
+            animation: fadeIn 1s ease-out;
+        }
 
         /* Big Explore Button */
         .explore-btn {
