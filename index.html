@@ -77,7 +77,7 @@
        /* START: New Header CSS */
 header {
     background: white;
-    padding: 8px 0;
+    padding: 6px 0;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
     position: sticky;
     top: 0;
@@ -162,12 +162,12 @@ header {
 .custom-hamburger {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
     width: 20px;
 }
 
 .custom-hamburger .line {
-    width: 20px;
+    width: 22px;
     height: 2.5px;
     background-color: #007BFF;
     border-radius: 1px;
@@ -645,18 +645,19 @@ header {
             .mobile-menu-btn {
                 display: block;
                 order: 0;
+                margin-left: 0;
             }
 
     .nine-dots-btn {
         display: block;
         order: 3;
         margin-left: auto;
-        margin-right: -10px;
+        margin-right: -5px;
     }
     
         .logo {
         order: 1;
-        margin-left: 25px;
+        margin-left: 15px;
         margin-right: auto;
         text-align: left;
         display: flex;
@@ -665,6 +666,10 @@ header {
     
     .navbar {
         justify-content: space-between;
+        align-items: center;
+        height: 40px;
+        padding: 0 10px;
+        
     }
     
     .contact-email {
