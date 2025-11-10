@@ -1185,7 +1185,7 @@ header {
                     });
                     
                     // Close mobile menu if open
-                    navLinks.classList.remove('active');
+                    // navLinks.classList.remove('active');
                 }
             });
         });
@@ -1300,15 +1300,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Allow Enter key to trigger search
+                        // Allow Enter key to trigger search
             document.querySelector('.search-bar').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     searchButton.click();
                 }
             });
         });
-    </script>
-                    // Mobile Menu Overlay Functionality
+
+        // Mobile Menu Overlay Functionality
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
         const closeMenuBtn = document.querySelector('.close-menu-btn');
@@ -1329,7 +1329,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 mobileMenuOverlay.style.display = 'none';
             }
         });
-    </script>
+   
+ </script>
 </body>
 </html>
 
