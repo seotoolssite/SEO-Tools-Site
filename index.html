@@ -745,6 +745,79 @@ header {
                 padding: 10px 20px;
             }
         }
+        /* Mobile Menu Overlay Styles */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.mobile-menu-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100%;
+    background: white;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #007BFF;
+}
+
+.mobile-menu-header h3 {
+    color: #007BFF;
+    font-size: 18px;
+    margin: 0;
+}
+
+.close-menu-btn {
+    background: none;
+    border: none;
+    color: #007BFF;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mobile-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-link:hover {
+    background: #007BFF;
+    color: white;
+    transform: translateX(5px);
+}
+
+.menu-icon {
+    font-size: 18px;
+}
     </style>
 </head>
 <body>
@@ -770,6 +843,29 @@ header {
         <span class="line"></span>
     </div>
 </button>
+            <!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay">
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-header">
+            <h3>🚀 Most Popular Tools</h3>
+            <button class="close-menu-btn">&times;</button>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="pdf-to-word.html" class="mobile-menu-link">
+                <span class="menu-icon">📄</span>
+                PDF to Word Converter
+            </a>
+            <a href="all-in-one-converter.html" class="mobile-menu-link">
+                <span class="menu-icon">🔄</span>
+                All-in-One Converter
+            </a>
+            <a href="image-compressor.html" class="mobile-menu-link">
+                <span class="menu-icon">📦</span>
+                Image Compressor
+            </a>
+        </div>
+    </div>
+</div>
             
             <div class="contact-email">
                 <i class="fa-solid fa-envelope email-icon"></i>
