@@ -1314,6 +1314,28 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     </script>
+                    // Mobile Menu Overlay Functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const closeMenuBtn = document.querySelector('.close-menu-btn');
+
+        // Open menu
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuOverlay.style.display = 'block';
+        });
+
+        // Close menu
+        closeMenuBtn.addEventListener('click', () => {
+            mobileMenuOverlay.style.display = 'none';
+        });
+
+        // Close menu when clicking outside
+        mobileMenuOverlay.addEventListener('click', (e) => {
+            if (e.target === mobileMenuOverlay) {
+                mobileMenuOverlay.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
 
