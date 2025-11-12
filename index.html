@@ -1224,8 +1224,10 @@ const toolSuggestions = [
 
 // Autocomplete Functionality
 function setupAutocomplete() {
-    const searchInput = document.getElementById('heroSearch');
-    const suggestionsContainer = document.getElementById('searchSuggestions');
+    const searchInput = document.querySelector('.search-bar');
+    const suggestionsContainer = document.createElement('div');
+    suggestionsContainer.className = 'autocomplete-suggestions';
+    document.querySelector('.search-container').appendChild(suggestionsContainer);
 
     searchInput.addEventListener('input', function() {
         const value = this.value.toLowerCase();
