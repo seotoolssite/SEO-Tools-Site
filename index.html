@@ -1269,9 +1269,8 @@ function setupAutocomplete() {
 // Initialize autocomplete when page loads
 document.addEventListener('DOMContentLoaded', function() {
     setupAutocomplete();
-});
-  // Add smooth animations
-        document.addEventListener('DOMContentLoaded', function() {
+
+            // Add smooth animations
             const ctaButton = document.querySelector('.cta-button');
             const iconCircles = document.querySelectorAll('.icon-circle');
             const searchButton = document.querySelector('.search-button');
@@ -1312,29 +1311,34 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Mobile Menu Overlay Functionality - Fixed Version
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-    const closeMenuBtn = document.querySelector('.close-menu-btn');
+               // ✅ FIXED: Mobile Menu Overlay - Simple Version
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const closeMenuBtn = document.querySelector('.close-menu-btn');
 
-    // Open menu
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenuOverlay.style.display = 'block';
-    });
-
-    // Close menu
-    closeMenuBtn.addEventListener('click', () => {
-        mobileMenuOverlay.style.display = 'none';
-    });
-
-    // Close menu when clicking outside
-    mobileMenuOverlay.addEventListener('click', (e) => {
-        if (e.target === mobileMenuOverlay) {
-            mobileMenuOverlay.style.display = 'none';
+        // Open menu with safety check
+        if (mobileMenuBtn && mobileMenuOverlay) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenuOverlay.style.display = 'block';
+            });
         }
-    });
-});
+
+        // Close menu with safety check  
+        if (closeMenuBtn && mobileMenuOverlay) {
+            closeMenuBtn.addEventListener('click', () => {
+                mobileMenuOverlay.style.display = 'none';
+            });
+        }
+
+        // Close menu when clicking outside
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', (e) => {
+                if (e.target === mobileMenuOverlay) {
+                    mobileMenuOverlay.style.display = 'none';
+                }
+            });
+        }
+
    
  </script>
 </body>
