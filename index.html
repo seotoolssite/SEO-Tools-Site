@@ -1309,36 +1309,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     searchButton.click();
                 }
             });
+
+            
+    // ✅ FIXED: Mobile Menu Overlay
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const closeMenuBtn = document.querySelector('.close-menu-btn');
+
+    // Open menu with safety check
+    if (mobileMenuBtn && mobileMenuOverlay) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuOverlay.style.display = 'block';
         });
+    }
 
-               // ✅ FIXED: Mobile Menu Overlay - Simple Version
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const closeMenuBtn = document.querySelector('.close-menu-btn');
+    // Close menu with safety check  
+    if (closeMenuBtn && mobileMenuOverlay) {
+        closeMenuBtn.addEventListener('click', () => {
+            mobileMenuOverlay.style.display = 'none';
+        });
+    }
 
-        // Open menu with safety check
-        if (mobileMenuBtn && mobileMenuOverlay) {
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenuOverlay.style.display = 'block';
-            });
-        }
-
-        // Close menu with safety check  
-        if (closeMenuBtn && mobileMenuOverlay) {
-            closeMenuBtn.addEventListener('click', () => {
+    // Close menu when clicking outside
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', (e) => {
+            if (e.target === mobileMenuOverlay) {
                 mobileMenuOverlay.style.display = 'none';
-            });
-        }
-
-        // Close menu when clicking outside
-        if (mobileMenuOverlay) {
-            mobileMenuOverlay.addEventListener('click', (e) => {
-                if (e.target === mobileMenuOverlay) {
-                    mobileMenuOverlay.style.display = 'none';
-                }
-            });
-        }
-
+            }
+        });
+    }
+});
    
  </script>
 </body>
