@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Free Plagiarism Checker | SEO Tools</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="../../index.html">Home</a> > 
+            <a href="../index.html">Tools</a> > 
+            <span>Plagiarism Checker</span>
+        </div>
+
+        <h1>🔍 Free Plagiarism Checker</h1>
+        <p>Check duplicate content for free</p>
+
+        <div class="tool-box">
+            <h3>Text 1 (Original)</h3>
+            <textarea id="text1" placeholder="Paste original text here..." rows="6"></textarea>
+            
+            <h3>Text 2 (To Check)</h3>
+            <textarea id="text2" placeholder="Paste text to check for plagiarism..." rows="6"></textarea>
+            
+            <button onclick="checkSimilarity()" class="btn">Check Plagiarism</button>
+            
+            <div id="result" class="result-box">
+                <h4>Result will appear here</h4>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkSimilarity() {
+            const text1 = document.getElementById('text1').value;
+            const text2 = document.getElementById('text2').value;
+            
+            if(!text1 || !text2) {
+                alert("Please enter text in both boxes!");
+                return;
+            }
+            
+            // Simple check
+            const words1 = text1.toLowerCase().split(/\s+/);
+            const words2 = text2.toLowerCase().split(/\s+/);
+            
+            let matches = 0;
+            for(let i = 0; i < Math.min(words1.length, words2.length); i++) {
+                if(words1[i] === words2[i]) matches++;
+            }
+            
+            const total = Math.min(words1.length, words2.length);
+            const percentage = total > 0 ? Math.round((matches / total) * 100) : 0;
+            
+            // Show result
+            document.getElementById('result').innerHTML = `
+                <h3>📊 Plagiarism Report</h3>
+                <p><strong>Similarity:</strong> ${percentage}%</p>
+                <p><strong>Words Checked:</strong> ${total}</p>
+                <p><strong>Matched Words:</strong> ${matches}</p>
+                <p><strong>Status:</strong> ${percentage > 50 ? "High Similarity" : "Low Similarity"}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
