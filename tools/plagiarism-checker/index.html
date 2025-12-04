@@ -1316,6 +1316,21 @@ function hideError() {
         console.error("Analysis error:", error);
         showErrorMessage("Analysis failed. Please try again.");
     }
+                           } catch (error) {
+            console.error("Analysis error:", error);
+            showErrorMessage("Analysis failed. Please try again.");
+        }
+
+        // ============ ERROR MESSAGE FUNCTION ============
+        function showErrorMessage(message) {
+            const errorElement = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorElement.classList.add('active');
+            setTimeout(() => errorElement.classList.remove('active'), 5000);
+        }
+        
+        function showSimplePlagiarismResults(result) {
 }        
 function showSimplePlagiarismResults(result) {
     // Hide AI score display
