@@ -902,9 +902,7 @@
     </div>
 
     <script>
-        // Google APIs Configuration - USING YOUR PROVIDED APIS
-        const GOOGLE_API_KEY = "AIzaSyDSH8mF8_F3_8JuJeOexuW8GL8iH336v7U";
-        const SEARCH_ENGINE_ID = "5278f4f560fea42cd";
+        
 
         class AIDetector {
             constructor() {
